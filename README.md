@@ -130,7 +130,7 @@ flowchart LR
 Clone o repositório e execute o setup:
 
 ```bash
-git clone https://github.com/seu-usuario/responsable-ai.git
+git clone https://github.com/glmrleite/responsable-ai.git
 cd responsable-ai
 ```
 
