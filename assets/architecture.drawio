@@ -1,0 +1,112 @@
+<mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- User -->
+    <mxCell id="2" value="👤 Usuário" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+      <mxGeometry x="375" y="30" width="150" height="60" as="geometry" />
+    </mxCell>
+
+    <!-- Gradio UI -->
+    <mxCell id="3" value="🖥️ Gradio UI" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+      <mxGeometry x="350" y="160" width="200" height="70" as="geometry" />
+    </mxCell>
+
+    <!-- GuardrailPipeline container -->
+    <mxCell id="4" value="⚙️ GuardrailPipeline" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#666666;dashed=1;dashPattern=8 8;strokeWidth=2;fontStyle=1;fontSize=12;verticalAlign=top;" vertex="1" parent="1">
+      <mxGeometry x="250" y="290" width="400" height="250" as="geometry" />
+    </mxCell>
+
+    <!-- Guardrail 1 - Toxicity -->
+    <mxCell id="5" value="🙊 Guardrail 1&lt;br&gt;&lt;b&gt;Toxicidade&lt;/b&gt;&lt;br&gt;(Detoxify)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="300" y="330" width="200" height="70" as="geometry" />
+    </mxCell>
+
+    <!-- Guardrail 2 - PII -->
+    <mxCell id="6" value="🔍 Guardrail 2&lt;br&gt;&lt;b&gt;Detecção de PII&lt;/b&gt;&lt;br&gt;(Presidio)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="300" y="440" width="200" height="70" as="geometry" />
+    </mxCell>
+
+    <!-- Blocked -->
+    <mxCell id="7" value="🚫 Bloqueado&lt;br&gt;Mensagem de recusa" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="630" y="330" width="170" height="70" as="geometry" />
+    </mxCell>
+
+    <!-- PII Masked -->
+    <mxCell id="8" value="⚠️ PII Mascarado&lt;br&gt;CPF · CNPJ · email · tel" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="630" y="440" width="170" height="70" as="geometry" />
+    </mxCell>
+
+    <!-- LiteLLM -->
+    <mxCell id="9" value="🤖 LiteLLM" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+      <mxGeometry x="350" y="610" width="200" height="70" as="geometry" />
+    </mxCell>
+
+    <!-- Ollama -->
+    <mxCell id="10" value="🦙 Ollama&lt;br&gt;llama3.2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+      <mxGeometry x="350" y="750" width="200" height="70" as="geometry" />
+    </mxCell>
+
+    <!-- Edge: User → Gradio UI -->
+    <mxCell id="11" value="mensagem" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=11;" edge="1" source="2" target="3" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Edge: Gradio UI → Guardrail 1 -->
+    <mxCell id="12" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="3" target="5" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Edge: Guardrail 1 → Blocked -->
+    <mxCell id="13" value="score ≥ 0.7" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=11;strokeColor=#b85450;fontColor=#b85450;" edge="1" source="5" target="7" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Edge: Guardrail 1 → Guardrail 2 -->
+    <mxCell id="14" value="score &lt; 0.7" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=11;strokeColor=#82b366;fontColor=#82b366;" edge="1" source="5" target="6" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Edge: Guardrail 2 → PII Masked -->
+    <mxCell id="15" value="PII encontrado" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=11;strokeColor=#d6b656;fontColor=#d6b656;" edge="1" source="6" target="8" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Edge: Guardrail 2 → LiteLLM -->
+    <mxCell id="16" value="sem PII" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=11;strokeColor=#82b366;fontColor=#82b366;" edge="1" source="6" target="9" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Edge: PII Masked → LiteLLM -->
+    <mxCell id="17" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#d6b656;" edge="1" source="8" target="9" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Edge: LiteLLM → Ollama -->
+    <mxCell id="18" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="9" target="10" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Edge: Blocked → Gradio UI (feedback, right side) -->
+    <mxCell id="19" value="recusa" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=11;strokeColor=#b85450;fontColor=#b85450;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="7" target="3" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="860" y="365" />
+          <mxPoint x="860" y="195" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Edge: Ollama → Gradio UI (response, left side) -->
+    <mxCell id="20" value="💬 resposta" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=11;strokeColor=#6c8ebf;fontColor=#6c8ebf;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="10" target="3" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="120" y="785" />
+          <mxPoint x="120" y="195" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+  </root>
+</mxGraphModel>
