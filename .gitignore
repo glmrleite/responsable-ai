@@ -20,6 +20,9 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Claude Code
+.claude/
+
 # Detoxify / Transformers cache
 *.ckpt
 *.bin

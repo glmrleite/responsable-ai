@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🛡️ Responsible AI — Guardrails na Prática
+# 🛡️ Responsible AI  Guardrails na Prática
 
 **Uma demonstração prática de como proteger sistemas de IA com guardrails de segurança.**
 
@@ -34,7 +34,7 @@
 
 ## 🔭 Visão Geral
 
-Este projeto demonstra na prática como aplicar **guardrails de segurança** em um sistema de chat baseado em LLM. Toda mensagem do usuário passa por uma pipeline de verificação antes de chegar ao modelo — bloqueando conteúdo tóxico e mascarando dados pessoais em tempo real.
+Este projeto demonstra na prática como aplicar **guardrails de segurança** em um sistema de chat baseado em LLM. Toda mensagem do usuário passa por uma pipeline de verificação antes de chegar ao modelo, bloqueando conteúdo tóxico e mascarando dados pessoais em tempo real.
 
 A interface exibe um **monitor de guardrails** ao vivo, tornando o projeto ideal para demonstrações, workshops e apresentações sobre IA responsável.
 
@@ -42,12 +42,12 @@ A interface exibe um **monitor de guardrails** ao vivo, tornando o projeto ideal
 
 ## 🤔 Por que Responsible AI?
 
-Modelos de linguagem (LLMs) são ferramentas extraordinariamente poderosas — e, exatamente por isso, exigem responsabilidade no uso. Sem controles adequados, sistemas baseados em IA podem:
+Modelos de linguagem (LLMs) são ferramentas extraordinariamente poderosas e, exatamente por isso, exigem responsabilidade no uso. Sem controles adequados, sistemas baseados em IA podem:
 
-- 🔓 **Expor dados sensíveis** — um usuário pode inadvertidamente enviar CPF, e-mail ou dados bancários que serão processados por terceiros ou armazenados em logs.
-- ☠️ **Amplificar discurso de ódio** — sem filtragem, o modelo pode receber, reproduzir ou até reforçar conteúdo tóxico e discriminatório.
-- ⚠️ **Gerar respostas prejudiciais** — sem guardrails de saída, o LLM pode produzir desinformação, instruções perigosas ou conteúdo inapropriado.
-- ⚖️ **Criar passivos legais e regulatórios** — a LGPD (Brasil), o GDPR (Europa) e o EU AI Act impõem obrigações claras sobre o tratamento de dados pessoais e o uso seguro de sistemas automatizados.
+- 🔓 **Expor dados sensíveis**  um usuário pode inadvertidamente enviar CPF, e-mail ou dados bancários que serão processados por terceiros ou armazenados em logs.
+- ☠️ **Amplificar discurso de ódio**  sem filtragem, o modelo pode receber, reproduzir ou até reforçar conteúdo tóxico e discriminatório.
+- ⚠️ **Gerar respostas prejudiciais**  sem guardrails de saída, o LLM pode produzir desinformação, instruções perigosas ou conteúdo inapropriado.
+- ⚖️ **Criar passivos legais e regulatórios**  a LGPD (Brasil), o GDPR (Europa) e o EU AI Act impõem obrigações claras sobre o tratamento de dados pessoais e o uso seguro de sistemas automatizados.
 
 > Guardrails são componentes de software que interceptam entradas e saídas do modelo para garantir que o sistema se comporte de forma segura, justa e em conformidade com as políticas da organização.
 
@@ -59,12 +59,12 @@ Modelos de linguagem (LLMs) são ferramentas extraordinariamente poderosas — e
 flowchart LR
     U(["👤 Usuário"])
     UI["🖥️ Gradio UI"]
-    T["🙊 Guardrail 1 — Toxicidade (Detoxify)"]
-    P["🔍 Guardrail 2 — Detecção de PII (Presidio)"]
-    BLOCK["🚫 Bloqueado — Mensagem de recusa"]
-    MASK["⚠️ PII Mascarado — CPF · CNPJ · email · telefone"]
+    T["🙊 Guardrail 1  Toxicidade (Detoxify)"]
+    P["🔍 Guardrail 2  Detecção de PII (Presidio)"]
+    BLOCK["🚫 Bloqueado  Mensagem de recusa"]
+    MASK["⚠️ PII Mascarado  CPF · CNPJ · email · telefone"]
     LLM["🤖 LiteLLM"]
-    OL["🦙 Ollama — llama3.2"]
+    OL["🦙 Ollama  llama3.2"]
     R(["💬 Resposta"])
 
     U -->|mensagem| UI
@@ -90,7 +90,7 @@ flowchart LR
 
 | # | Guardrail | Biblioteca | Limiar | Ação |
 |---|-----------|-----------|--------|------|
-| 1 | 🙊 Toxicidade / hate speech | [Detoxify](https://github.com/unitaryai/detoxify) | score ≥ 0.7 | Bloqueia — mensagem **não** chega ao LLM |
+| 1 | 🙊 Toxicidade / hate speech | [Detoxify](https://github.com/unitaryai/detoxify) | score ≥ 0.7 | Bloqueia  mensagem **não** chega ao LLM |
 | 2 | 🔍 Dados pessoais (PII) | [Presidio](https://microsoft.github.io/presidio/) | confiança ≥ 60% | Mascara antes de enviar ao LLM |
 
 **Entidades PII detectadas:** CPF, CNPJ, e-mail, telefone, nome, cartão de crédito, endereço IP, URL e mais.
@@ -104,8 +104,8 @@ flowchart LR
 | Frontend | [Gradio](https://www.gradio.app/) | Interface de chat interativa |
 | Roteamento LLM | [LiteLLM](https://litellm.ai/) | Camada de abstração sobre provedores de LLM |
 | LLM local | [Ollama](https://ollama.com/) | Execução local do modelo (llama3.2) |
-| Guardrail — Toxicidade | [Detoxify](https://github.com/unitaryai/detoxify) | Classificação de conteúdo tóxico via ML |
-| Guardrail — PII | [Presidio](https://microsoft.github.io/presidio/) | Detecção e anonimização de dados pessoais |
+| Guardrail  Toxicidade | [Detoxify](https://github.com/unitaryai/detoxify) | Classificação de conteúdo tóxico via ML |
+| Guardrail  PII | [Presidio](https://microsoft.github.io/presidio/) | Detecção e anonimização de dados pessoais |
 | Containerização | [Docker](https://www.docker.com/) + Compose | Isola e gerencia o serviço Ollama |
 | Automação | [Make](https://www.gnu.org/software/make/) | Orquestra setup, execução e limpeza |
 | Ambiente Python | venv | Isolamento de dependências Python |
@@ -121,7 +121,7 @@ flowchart LR
 | Docker | 24+ | [docs.docker.com/engine/install](https://docs.docker.com/engine/install/) |
 | Docker Compose | v2 | `sudo apt install docker-compose-v2` |
 
-> **Nota:** O Ollama roda dentro do Docker — não é necessário instalá-lo no host.
+> **Nota:** O Ollama roda dentro do Docker  não é necessário instalá-lo no host.
 
 ---
 
@@ -205,8 +205,8 @@ responsable-ai/
 │   └── pii.py                    # Guardrail 2: detecção e mascaramento de PII (Presidio)
 ├── assets/
 │   ├── architecture.drawio       # Diagrama de arquitetura editável
-│   ├── front-example.png         # Screenshot — guardrail de PII
-│   └── front-example-toxicity.png # Screenshot — guardrail de toxicidade
+│   ├── front-example.png         # Screenshot  guardrail de PII
+│   └── front-example-toxicity.png # Screenshot  guardrail de toxicidade
 ├── docker-compose.yml            # Serviço Ollama
 ├── requirements.txt              # Dependências Python
 ├── Makefile                      # Automação de tarefas
@@ -223,26 +223,26 @@ responsable-ai/
 | ✅ Normal | `Olá, como funciona machine learning?` | Enviada ao LLM sem alterações |
 | ⚠️ PII | `Meu CPF é 123.456.789-00 e email joao@empresa.com` | CPF e e-mail mascarados antes do envio |
 | ⚠️ PII | `Me liga no (11) 98765-4321, CNPJ 12.345.678/0001-99` | Telefone e CNPJ mascarados antes do envio |
-| 🚫 Bloqueado | `I hate those people, they should all die` | Bloqueada — LLM nunca recebe a mensagem |
-| 🚫 Bloqueado | `You are the dumbest AI, kill yourself` | Bloqueada — LLM nunca recebe a mensagem |
+| 🚫 Bloqueado | `I hate those people, they should all die` | Bloqueada  LLM nunca recebe a mensagem |
+| 🚫 Bloqueado | `You are the dumbest AI, kill yourself` | Bloqueada  LLM nunca recebe a mensagem |
 
 ---
 
 ## 🖥️ Interface
 
-Pense nos guardrails como seguranças na porta de entrada: toda mensagem passa pela triagem antes de chegar ao modelo — se algo suspeito for detectado, o sistema age antes que qualquer dano aconteça.
+Pense nos guardrails como seguranças na porta de entrada: toda mensagem passa pela triagem antes de chegar ao modelo  se algo suspeito for detectado, o sistema age antes que qualquer dano aconteça.
 
-**Guardrail de PII — mascaramento de dados pessoais**
+**Guardrail de PII  mascaramento de dados pessoais**
 
 Quando o usuário digita informações sensíveis como CPF ou e-mail, o sistema detecta automaticamente esses dados e os substitui por marcadores genéricos antes de enviar a mensagem ao modelo. O painel lateral exibe exatamente o que foi encontrado e o que foi enviado ao LLM.
 
-![Interface com guardrail de PII ativo — dados pessoais são mascarados antes de chegar ao LLM](assets/front-example.png)
+![Interface com guardrail de PII ativo  dados pessoais são mascarados antes de chegar ao LLM](assets/front-example.png)
 
-**Guardrail de Toxicidade — bloqueio de conteúdo ofensivo**
+**Guardrail de Toxicidade  bloqueio de conteúdo ofensivo**
 
 Quando o usuário envia uma mensagem com conteúdo agressivo ou de ódio, o sistema calcula um score de toxicidade e, se ultrapassar o limiar configurado (0.7), bloqueia a mensagem na entrada. O modelo nunca chega a ver o conteúdo.
 
-![Interface com guardrail de toxicidade ativo — mensagem bloqueada antes de chegar ao LLM](assets/front-example-toxicity.png)
+![Interface com guardrail de toxicidade ativo  mensagem bloqueada antes de chegar ao LLM](assets/front-example-toxicity.png)
 
 ---
 
@@ -257,7 +257,7 @@ make ollama-down
 # Remove o venv e o cache Python (mantém o Docker intacto)
 make clean
 
-# Limpeza total — remove tudo, incluindo volumes Docker
+# Limpeza total  remove tudo, incluindo volumes Docker
 # ⚠️  Os modelos Ollama serão apagados e precisarão ser baixados novamente
 make clean-all
 ```
