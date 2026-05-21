@@ -264,6 +264,33 @@ make clean-all
 
 ---
 
+## 🔧 Troubleshooting
+
+### Download do modelo trava (`make setup`)
+
+O Detoxify faz download de ~500 MB na primeira execução. Em conexões lentas pode parecer travado — aguarde ou rode `make setup` novamente (o download é retomável).
+
+### Ollama container não sobe
+
+```bash
+docker compose logs ollama
+```
+
+Causa comum: porta `11434` já ocupada por outro processo. Verifique com `lsof -i :11434` e encerre o processo conflitante.
+
+### Aplicação não acessa o Ollama
+
+O Gradio e o Ollama precisam estar ambos em execução. Confirme:
+
+```bash
+docker compose ps          # Ollama deve estar Up
+curl http://localhost:11434/api/tags  # deve listar os modelos baixados
+```
+
+Se o Ollama estiver rodando mas sem o modelo, rode `make ollama-pull` novamente.
+
+---
+
 ## 🤝 Contribuição
 
 Contribuições são bem-vindas! Para contribuir:
