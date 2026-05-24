@@ -1,0 +1,350 @@
+{
+  "version": "1.0.0",
+  "project": {
+    "name": "responsable-ai",
+    "languages": ["python", "yaml", "markdown", "config", "makefile", "txt"],
+    "frameworks": ["Gradio", "LiteLLM", "Detoxify", "Presidio", "Docker Compose"],
+    "description": "A practical demonstration of how to protect LLM-based chat systems with safety guardrails, blocking toxic content via Detoxify and masking personally identifiable information (PII) via Presidio before messages reach the model.",
+    "analyzedAt": "2026-05-24T22:55:00Z",
+    "gitCommitHash": "9349c6ecf52293330281cc7dd562064ffa21af37"
+  },
+  "nodes": [
+    {
+      "id": "file:app.py",
+      "type": "file",
+      "name": "app.py",
+      "filePath": "app.py",
+      "summary": "Main Gradio application entry point that builds the chat UI, runs messages through the guardrail pipeline, and streams LiteLLM completions with an inline HTML safety analysis panel.",
+      "tags": ["entry-point", "api-handler", "middleware", "component", "event-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:app.py:_render_guardrail_html",
+      "type": "function",
+      "name": "_render_guardrail_html",
+      "filePath": "app.py",
+      "lineRange": [52, 130],
+      "summary": "Renders a detailed HTML panel displaying toxicity scores and detected PII entities from the guardrail analysis result, using color-coded badges and expandable sections.",
+      "tags": ["utility", "component", "serialization"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:app.py:respond",
+      "type": "function",
+      "name": "respond",
+      "filePath": "app.py",
+      "lineRange": [142, 172],
+      "summary": "Core chat handler that runs the guardrail pipeline on user input, blocks toxic messages, uses PII-anonymized text when sending to the LLM, and streams the model response back.",
+      "tags": ["api-handler", "middleware", "event-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:guardrails/pii.py",
+      "type": "file",
+      "name": "pii.py",
+      "filePath": "guardrails/pii.py",
+      "summary": "PII detection and anonymization module using Microsoft Presidio; initializes a singleton analyzer and anonymizer to mask sensitive entities such as names, emails, and phone numbers in input text.",
+      "tags": ["security", "utility", "middleware", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:guardrails/pii.py:detect_and_anonymize",
+      "type": "function",
+      "name": "detect_and_anonymize",
+      "filePath": "guardrails/pii.py",
+      "lineRange": [27, 46],
+      "summary": "Analyzes text for PII entities using Presidio and returns both an anonymized version of the text and a flag indicating whether any PII was detected.",
+      "tags": ["security", "validation", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:guardrails/pipeline.py",
+      "type": "file",
+      "name": "pipeline.py",
+      "filePath": "guardrails/pipeline.py",
+      "summary": "Defines the GuardrailPipeline class that orchestrates sequential safety checks — toxicity detection followed by PII detection and anonymization — returning a consolidated analysis result.",
+      "tags": ["middleware", "service", "factory"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:guardrails/pipeline.py:GuardrailPipeline",
+      "type": "class",
+      "name": "GuardrailPipeline",
+      "filePath": "guardrails/pipeline.py",
+      "lineRange": [5, 33],
+      "summary": "Orchestrator class that runs toxicity and PII guardrails in sequence and aggregates the results into a single dict for the caller.",
+      "tags": ["middleware", "service", "singleton"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:guardrails/toxicity.py",
+      "type": "file",
+      "name": "toxicity.py",
+      "filePath": "guardrails/toxicity.py",
+      "summary": "Toxicity detection module using the Detoxify library; lazily loads the model on first use and returns per-category toxicity scores with a composite maximum score for a given text.",
+      "tags": ["security", "utility", "middleware"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:guardrails/toxicity.py:check_toxicity",
+      "type": "function",
+      "name": "check_toxicity",
+      "filePath": "guardrails/toxicity.py",
+      "lineRange": [14, 21],
+      "summary": "Runs Detoxify prediction on the input text and returns a dict containing the per-category float scores and the overall maximum toxicity score.",
+      "tags": ["security", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:.env.example",
+      "type": "config",
+      "name": ".env.example",
+      "filePath": ".env.example",
+      "summary": "Example environment configuration file defining two runtime variables: OLLAMA_MODEL (defaults to ollama/llama3.2) and OLLAMA_BASE_URL (defaults to http://localhost:11434), which control which LLM model is used and where to reach the Ollama service.",
+      "tags": ["configuration", "environment", "ollama", "runtime"],
+      "complexity": "simple"
+    },
+    {
+      "id": "resource:Makefile",
+      "type": "resource",
+      "name": "Makefile",
+      "filePath": "Makefile",
+      "summary": "Developer automation Makefile with 11 targets covering the full project lifecycle: creating a virtualenv, installing Python dependencies, downloading spaCy and Detoxify models, managing the Ollama Docker container, running the Gradio app, and cleaning up artifacts.",
+      "tags": ["build-system", "infrastructure", "automation", "development"],
+      "complexity": "moderate",
+      "languageNotes": "Uses GNU Make with a .PHONY declaration for all targets, variable overrides for OLLAMA_MODEL, and a health-check loop (until docker exec) before declaring Ollama ready."
+    },
+    {
+      "id": "step:Makefile:help",
+      "type": "resource",
+      "name": "help",
+      "filePath": "Makefile",
+      "summary": "Prints a usage summary listing all available make targets with brief descriptions.",
+      "tags": ["documentation", "build-system"],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:Makefile:setup",
+      "type": "resource",
+      "name": "setup",
+      "filePath": "Makefile",
+      "summary": "Installs all dependencies (pip packages, spaCy en_core_web_lg model, and Detoxify weights) to prepare the environment for running the application.",
+      "tags": ["build-system", "dependency-management"],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:Makefile:ollama-up",
+      "type": "resource",
+      "name": "ollama-up",
+      "filePath": "Makefile",
+      "summary": "Starts the Ollama Docker container via docker compose and waits until the service is responsive before returning.",
+      "tags": ["infrastructure", "deployment", "containerization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:Makefile:run",
+      "type": "resource",
+      "name": "run",
+      "filePath": "Makefile",
+      "summary": "Launches the Gradio application by invoking app.py inside the project virtualenv.",
+      "tags": ["build-system", "deployment"],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:Makefile:clean-all",
+      "type": "resource",
+      "name": "clean-all",
+      "filePath": "Makefile",
+      "summary": "Performs a full cleanup by stopping the Ollama container, removing the virtualenv, Python cache files, and Docker volumes.",
+      "tags": ["build-system", "infrastructure"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "README.md",
+      "summary": "Comprehensive Portuguese-language project documentation (23 sections, 310 lines) covering architecture overview, responsible AI rationale, guardrails description (toxicity blocking via Detoxify, PII masking via Presidio), technology stack, installation steps, make command reference, usage examples, and troubleshooting guidance.",
+      "tags": ["documentation", "entry-point", "overview", "architecture"],
+      "complexity": "complex",
+      "languageNotes": "Written in Brazilian Portuguese with an ASCII architecture diagram and detailed per-guardrail explanations illustrating the message processing pipeline."
+    },
+    {
+      "id": "service:docker-compose.yml",
+      "type": "service",
+      "name": "docker-compose.yml",
+      "filePath": "docker-compose.yml",
+      "summary": "Docker Compose file that defines a single `ollama` service running the official ollama/ollama image on port 11434 with a persistent named volume (ollama_data) for model storage, with optional GPU support commented out.",
+      "tags": ["orchestration", "infrastructure", "containerization", "deployment"],
+      "complexity": "simple",
+      "languageNotes": "GPU support (NVIDIA) is present but commented out, making it easy to enable for hardware-accelerated inference."
+    },
+    {
+      "id": "document:requirements.txt",
+      "type": "document",
+      "name": "requirements.txt",
+      "filePath": "requirements.txt",
+      "summary": "Python dependency manifest listing the eight runtime packages: Gradio (UI), LiteLLM (LLM gateway), Presidio analyzer and anonymizer (PII detection/masking), Detoxify (toxicity classification), PyTorch, Transformers, and spaCy.",
+      "tags": ["documentation", "configuration", "dependency-management"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:.understand-anything/.understandignore",
+      "type": "file",
+      "name": ".understandignore",
+      "filePath": ".understand-anything/.understandignore",
+      "summary": "Gitignore-syntax exclusion file for the understand-anything analysis tool, actively excluding the .venv/ and assets/ directories from codebase scanning, with commented-out suggestions for test files and common Python artifacts.",
+      "tags": ["configuration", "build-system", "infrastructure"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:guardrails/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "guardrails/__init__.py",
+      "summary": "Empty Python package initializer that marks the guardrails directory as an importable package, enabling relative imports of the toxicity and PII guardrail modules.",
+      "tags": ["entry-point", "barrel"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {"source": "file:app.py", "target": "file:guardrails/pipeline.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:guardrails/pipeline.py", "target": "file:guardrails/pii.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:guardrails/pipeline.py", "target": "file:guardrails/toxicity.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:app.py", "target": "function:app.py:_render_guardrail_html", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:app.py", "target": "function:app.py:respond", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:app.py", "target": "function:app.py:_render_guardrail_html", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:app.py", "target": "function:app.py:respond", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:guardrails/pii.py", "target": "function:guardrails/pii.py:detect_and_anonymize", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:guardrails/pii.py", "target": "function:guardrails/pii.py:detect_and_anonymize", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:guardrails/pipeline.py", "target": "class:guardrails/pipeline.py:GuardrailPipeline", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:guardrails/pipeline.py", "target": "class:guardrails/pipeline.py:GuardrailPipeline", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:guardrails/toxicity.py", "target": "function:guardrails/toxicity.py:check_toxicity", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:guardrails/toxicity.py", "target": "function:guardrails/toxicity.py:check_toxicity", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "function:app.py:respond", "target": "class:guardrails/pipeline.py:GuardrailPipeline", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:app.py:respond", "target": "function:app.py:_render_guardrail_html", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "class:guardrails/pipeline.py:GuardrailPipeline", "target": "function:guardrails/toxicity.py:check_toxicity", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "class:guardrails/pipeline.py:GuardrailPipeline", "target": "function:guardrails/pii.py:detect_and_anonymize", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "config:.env.example", "target": "service:docker-compose.yml", "type": "configures", "direction": "forward", "weight": 0.6},
+    {"source": "resource:Makefile", "target": "step:Makefile:help", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "resource:Makefile", "target": "step:Makefile:setup", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "resource:Makefile", "target": "step:Makefile:ollama-up", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "resource:Makefile", "target": "step:Makefile:run", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "resource:Makefile", "target": "step:Makefile:clean-all", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "resource:Makefile", "target": "service:docker-compose.yml", "type": "depends_on", "direction": "forward", "weight": 0.6},
+    {"source": "resource:Makefile", "target": "file:app.py", "type": "deploys", "direction": "forward", "weight": 0.7},
+    {"source": "resource:Makefile", "target": "document:requirements.txt", "type": "depends_on", "direction": "forward", "weight": 0.6},
+    {"source": "document:README.md", "target": "file:app.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:README.md", "target": "resource:Makefile", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:README.md", "target": "service:docker-compose.yml", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "service:docker-compose.yml", "target": "file:app.py", "type": "deploys", "direction": "forward", "weight": 0.7}
+  ],
+  "layers": [
+    {
+      "id": "layer:application",
+      "name": "Application Layer",
+      "description": "Gradio chat UI entry point that orchestrates the guardrail pipeline and streams LiteLLM/Ollama completions with an inline safety analysis panel.",
+      "nodeIds": ["file:app.py"]
+    },
+    {
+      "id": "layer:guardrails",
+      "name": "Guardrails Service",
+      "description": "Safety middleware package that sequentially applies toxicity detection (Detoxify) and PII anonymization (Presidio) to user messages before they reach the LLM.",
+      "nodeIds": [
+        "file:guardrails/pipeline.py",
+        "file:guardrails/pii.py",
+        "file:guardrails/toxicity.py",
+        "file:guardrails/__init__.py"
+      ]
+    },
+    {
+      "id": "layer:project-support",
+      "name": "Project Support",
+      "description": "Infrastructure, configuration, documentation, and tooling files that define the runtime environment, developer automation, and project dependencies for this Ollama-backed demo.",
+      "nodeIds": [
+        "service:docker-compose.yml",
+        "resource:Makefile",
+        "step:Makefile:help",
+        "step:Makefile:setup",
+        "step:Makefile:ollama-up",
+        "step:Makefile:run",
+        "step:Makefile:clean-all",
+        "config:.env.example",
+        "document:README.md",
+        "document:requirements.txt",
+        "file:.understand-anything/.understandignore"
+      ]
+    }
+  ],
+  "tour": [
+    {
+      "order": 1,
+      "title": "Project Overview",
+      "description": "The README is the best starting point for understanding what this project is and why it exists. It lays out the core safety proposition — every user message travels through a guardrail pipeline before reaching the LLM — and documents the two implemented guardrails: toxicity blocking via Detoxify (score ≥ 0.7) and PII masking via Presidio (confidence ≥ 60%). Reading this first gives you the mental model that makes every code file below make sense.",
+      "nodeIds": ["document:README.md"]
+    },
+    {
+      "order": 2,
+      "title": "Python Dependencies",
+      "description": "Before reading any code, it pays to know exactly what libraries are in play. The requirements.txt lists the 8 runtime packages that power the project: Gradio for the UI, LiteLLM as the model abstraction layer, Detoxify and Presidio for the two guardrails, and supporting utilities. Each package maps directly to one of the architectural layers described in the README.",
+      "nodeIds": ["document:requirements.txt"],
+      "languageLesson": "Python's requirements.txt pins package versions for reproducibility. A common pattern is to maintain a requirements.txt for production installs and a requirements-dev.txt for test and lint tools, keeping the production image lean."
+    },
+    {
+      "order": 3,
+      "title": "Application Entry Point",
+      "description": "app.py is where everything comes together: it builds the Gradio chat UI, instantiates the guardrail pipeline, and streams LiteLLM completions back to the user. This is the highest fan-in node in the graph — the README documents it, the Makefile deploys it, and docker-compose launches it — making it the project's central coordination point. Understanding this file gives you a bird's-eye view of the full request lifecycle.",
+      "nodeIds": ["file:app.py"],
+      "languageLesson": "Python's lazy import pattern (importing inside a function) is common in ML applications to avoid loading heavy models at startup. Gradio's streaming callbacks use Python generators — functions that yield values — to push incremental LLM output to the browser without blocking."
+    },
+    {
+      "order": 4,
+      "title": "Environment Configuration",
+      "description": "The .env.example file reveals the two runtime knobs that control which LLM the application talks to: OLLAMA_MODEL (which model to load, e.g. llama3) and OLLAMA_BASE_URL (where the Ollama server is listening). These environment variables are the interface between app.py and the docker-compose-managed Ollama service — copy this file to .env and adjust before running locally.",
+      "nodeIds": ["config:.env.example"],
+      "languageLesson": "The .env pattern (dotenv files) separates runtime secrets and environment-specific config from source code. The .env.example file is committed to source control as a template; the actual .env file is gitignored to prevent credentials from leaking."
+    },
+    {
+      "order": 5,
+      "title": "The Guardrail Pipeline",
+      "description": "pipeline.py defines the GuardrailPipeline class — the safety middleware that sits between the Gradio UI and the LLM. It orchestrates the two guardrails in a fixed sequential order: toxicity check first, then PII masking. If toxicity detection blocks a message, PII masking never runs, and the LLM is never called. This fail-fast design is the key architectural decision that prevents harmful or privacy-violating requests from reaching the model.",
+      "nodeIds": ["file:guardrails/pipeline.py"],
+      "languageLesson": "The pipeline pattern (chain of responsibility) is a common design for composable middleware. Each step in the chain either passes the message forward (possibly transformed) or short-circuits by returning an error result."
+    },
+    {
+      "order": 6,
+      "title": "Toxicity Detection",
+      "description": "toxicity.py implements the first guardrail using the Detoxify library. It uses lazy initialization — the model is only loaded into memory on the first call, keeping startup time fast. When invoked, it returns per-category toxicity scores (toxicity, severe_toxicity, insult, threat, etc.). The pipeline in Step 5 uses these scores to decide whether to block the message before PII analysis ever runs.",
+      "nodeIds": ["file:guardrails/toxicity.py"],
+      "languageLesson": "Lazy initialization with a module-level singleton (e.g., `_model = None` then `if _model is None: _model = load()`) is a standard Python pattern for expensive resources like ML models. It avoids paying the loading cost until the resource is actually needed."
+    },
+    {
+      "order": 7,
+      "title": "PII Detection and Masking",
+      "description": "pii.py implements the second guardrail using Microsoft Presidio. It initializes a singleton AnalyzerEngine and AnonymizerEngine at module load time. The analyzer detects sensitive entities (names, emails, phone numbers, credit card numbers, etc.) in the text, and the anonymizer replaces them with placeholders like <PERSON> or <EMAIL_ADDRESS> before the sanitized message is forwarded to the LLM.",
+      "nodeIds": ["file:guardrails/pii.py"],
+      "languageLesson": "Presidio uses a recognizer registry pattern: built-in recognizers handle common entity types while custom recognizers can be added for domain-specific PII. The analyzer returns a list of RecognizerResult objects with entity type, position, and confidence score."
+    },
+    {
+      "order": 8,
+      "title": "Guardrails Package Structure",
+      "description": "The guardrails/__init__.py file is an empty package initializer — its presence alone tells Python to treat the guardrails/ directory as an importable package. This structural choice groups the three guardrail modules (pipeline, toxicity, pii) into a cohesive namespace, so app.py can import them cleanly.",
+      "nodeIds": ["file:guardrails/__init__.py"],
+      "languageLesson": "In Python, a directory becomes a package when it contains an __init__.py file. An empty __init__.py is a minimal package declaration. A populated __init__.py can re-export symbols to create a cleaner public API."
+    },
+    {
+      "order": 9,
+      "title": "Ollama Service",
+      "description": "docker-compose.yml defines the Ollama LLM server that app.py talks to via LiteLLM. It runs the official ollama/ollama image on port 11434 with a named volume for model persistence — so downloaded models survive container restarts. This is the runtime backend that app.py's OLLAMA_BASE_URL environment variable points to.",
+      "nodeIds": ["service:docker-compose.yml"],
+      "languageLesson": "Docker named volumes (as opposed to bind mounts) are managed by Docker and persist independently of the container lifecycle. For LLM backends like Ollama, this means downloaded model weights are preserved across docker-compose down/up cycles."
+    },
+    {
+      "order": 10,
+      "title": "Developer Automation",
+      "description": "The Makefile ties together the full project lifecycle with 11 targets. It depends on both docker-compose.yml (for the Ollama service) and requirements.txt (for the Python environment), and it deploys app.py directly. Targets cover environment setup, starting Ollama, pulling models, running the app, and cleanup — giving any developer a single entry point for every common task.",
+      "nodeIds": ["resource:Makefile"],
+      "languageLesson": "Makefiles use tab-indented recipes under named targets. The `.PHONY` directive marks targets that don't produce files (like `clean` or `run`), preventing make from skipping them when a file of the same name exists."
+    }
+  ]
+}
